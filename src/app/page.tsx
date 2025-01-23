@@ -1,5 +1,7 @@
 "use client";
 
+import Chat from "./components/Chat/Chat";
+
 // import { useState } from "react";
 
 export default function Home() {
@@ -9,5 +11,9 @@ export default function Home() {
   //   setIsSidebarOpen(!isSidebarOpen);
   // };
 
-  return <div className="flex"></div>;
+  return (
+    <div className="flex h-full justify-center">
+      <Chat />
+    </div>
+  );
 }

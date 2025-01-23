@@ -1,4 +1,3 @@
-"use client";
 import { Sidebar, SidebarFooter } from "@/components/ui/sidebar";
 import { SidebarBody } from "./SidebarBody";
 
