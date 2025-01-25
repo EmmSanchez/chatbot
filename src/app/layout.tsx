@@ -24,8 +24,8 @@ export default function RootLayout({
       <body className={` ${roboto} antialiased`}>
         <SidebarProvider>
           <AppSidebar />
-          <main className="bg-[#F5F5F5] w-full">
-            <SidebarTrigger className="absolute ml-1" />
+          <main className="w-full">
+            <SidebarTrigger className="absolute ml-1 mt-1" />
             {children}
           </main>
         </SidebarProvider>

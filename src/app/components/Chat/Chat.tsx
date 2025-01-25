@@ -1,7 +1,6 @@
 // import { motion } from "motion/react";
 import { ForwardIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
-
 export default function Chat() {
   return (
     <div className="flex flex-col gap-4 justify-center items-center">
@@ -11,7 +10,7 @@ export default function Chat() {
         your tokens effortlessly
       </p>
 
-      <div className="w-full bg-white rounded-lg p-1 border-solid border-[1px] border-zinc-200">
+      <div className="w-full bg-white rounded-2xl p-1 border-solid border-[1px] border-zinc-200">
         <TextAreaAutosize
           className="max-h-64 mt-2 w-full resize-none px-3 py-2 rounded-md text-zinc-600 focus:outline-none"
           placeholder="Type your message..."

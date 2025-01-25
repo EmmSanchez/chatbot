@@ -49,7 +49,7 @@ export function SidebarBody() {
                       <SidebarMenuButton
                         asChild
                         onClick={() => setIsMessagesOpen(!isMessagesOpen)}
-                        className={`hover:bg-[#EFEFEF] rounded-md hover:text-black group-data-[state=open]/collapsible:hover:hover:bg-[#EFEFEF] group-data-[state=open]/collapsible:hover:hover:text-black`}
+                        className={`rounded-[6px] hover:bg-[#DDE0D6] transition-colors hover:text-black group-data-[state=open]/collapsible:hover:bg-[#DDE0D6] group-data-[state=open]/collapsible:hover:text-black`}
                       >
                         <CollapsibleTrigger>
                           <MessageSquareText />
@@ -62,17 +62,27 @@ export function SidebarBody() {
                         <AnimatePresence>
                           {isMessagesOpen && (
                             <motion.div
-                              initial={{ opacity: 0, y: -10 }}
+                              initial={{ opacity: 0, y: -5 }}
                               animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 1, y: -10 }}
+                              exit={{ opacity: 1, y: -5 }}
                               transition={{
-                                duration: 0.1,
+                                duration: 0.05,
                               }}
                             >
-                              <SidebarMenuSub>
-                                <SidebarMenuSubItem>
+                              <SidebarMenuSub className="border-l-2 border-[#EDEDED]">
+                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] transition-colors rounded-[6px] hover:text-black hover:cursor-pointer">
                                   <SidebarMenuSubButton>
                                     Mensaje 1
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] hover:text-black hover:cursor-pointer">
+                                  <SidebarMenuSubButton>
+                                    Mensaje 2
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] hover:text-black hover:cursor-pointer">
+                                  <SidebarMenuSubButton>
+                                    Mensaje 3
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
                               </SidebarMenuSub>
@@ -82,7 +92,6 @@ export function SidebarBody() {
                       }
                       {/* <CollapsibleContent></CollapsibleContent> */}
                     </SidebarMenuItem>
-                    <SidebarGroup></SidebarGroup>
                   </Collapsible>
                 );
               }
@@ -90,7 +99,7 @@ export function SidebarBody() {
               return (
                 <SidebarMenuItem
                   key={index}
-                  className="hover:bg-[#EFEFEF] rounded-md hover:text-black"
+                  className="rounded-[6px] transition-colors hover:bg-[#DDE0D6] hover:text-black"
                 >
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
