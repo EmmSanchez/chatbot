@@ -1,26 +1,48 @@
-// import { motion } from "motion/react";
-import { ForwardIcon } from "lucide-react";
-import TextAreaAutosize from "react-textarea-autosize";
-export default function Chat() {
-  return (
-    <div className="flex flex-col gap-4 justify-center items-center">
-      <h2 className="text-7xl text-center font-bold">What’s our next trade?</h2>
-      <p className="max-w-2xl text-lg text-center text-zinc-600">
-        I&apos;m your crypto assistant, here to help you trade, swap, and manage
-        your tokens effortlessly
-      </p>
+import { useStore } from "@/store/store";
+import { ChatForm } from "./ChatForm";
+import { AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 
-      <div className="w-full bg-white rounded-2xl p-1 border-solid border-[1px] border-zinc-200">
-        <TextAreaAutosize
-          className="max-h-64 mt-2 w-full resize-none px-3 py-2 rounded-md text-zinc-600 focus:outline-none"
-          placeholder="Type your message..."
-        ></TextAreaAutosize>
-        <div className="flex justify-end">
-          <button className="flex justify-center items-center p-2 rounded-full hover:bg-[#F5F5F5] transition-colors ease-in-out">
-            <ForwardIcon className="rotate-180 scale-x-[-1]" />
-          </button>
-        </div>
-      </div>
-    </div>
+export default function Chat() {
+  const messages = useStore((state) => state.messages);
+
+  return (
+    <>
+      <AnimatePresence mode="wait">
+        {messages.length === 0 ? (
+          <motion.div
+            key="empty-state"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+              duration: 0.4,
+              type: "tween",
+              ease: "backInOut",
+            }}
+            className="flex flex-col gap-4 justify-center items-center w-[840px] px-4"
+          >
+            <h2 className="text-4xl text-center font-bold">
+              Your{" "}
+              <span className="bg-gradient-to-br from-[#3aaaf6] to-[#0470c5] text-transparent bg-clip-text">
+                AI-Powered
+              </span>{" "}
+              Crypto Companion
+            </h2>
+            <p className="max-w-sm text-base text-center text-zinc-600">
+              Automated, user-friendly chat for token swaps and crypto insights.
+            </p>
+
+            <ChatForm />
+          </motion.div>
+        ) : (
+          <ul>
+            {messages.map((message, index) => {
+              return <li key={index}>{message.content}</li>;
+            })}
+          </ul>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

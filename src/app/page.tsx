@@ -12,7 +12,7 @@ export default function Home() {
   // };
 
   return (
-    <div className="flex h-full justify-center">
+    <div className="flex h-full justify-center overflow-hidden">
       <Chat />
     </div>
   );
