@@ -28,7 +28,7 @@ export function HeroChatForm() {
         </p>
 
         <button
-          disabled={prompt.trim().length === 0}
+          disabled={prompt.trim().length === 0 || prompt.length > 2000}
           type="submit"
           className="group relative inline-flex size-11 items-center justify-center overflow-hidden rounded-full bg-black font-medium text-white transition-all duration-200 hover:w-24 disabled:bg-zinc-300 border-solid border-[1px] disabled:border-zinc-400 disabled:text-zinc-400 disabled:cursor-not-allowed disabled:hover:w-11"
         >

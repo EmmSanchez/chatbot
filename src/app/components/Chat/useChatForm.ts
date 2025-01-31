@@ -30,6 +30,16 @@ export const useChatForm = () => {
       addMessage(newMessage);
 
       setPrompt("");
+
+      const botMessage: Message = {
+        role: "bot",
+        content:
+          "Si no puedes pagarla y buscas alternativas Puedes usar fuentes similares gratuitas en Google Fonts como: Montserrat Poppins Work Sans Si necesitas que se parezca más a Mier A, dime qué características buscas (como el peso de las letras o la forma de los caracteres) y te ayudo a encontrar una opción gratuita. 🚀",
+        date: new Date(),
+        status: "pending",
+      };
+
+      addMessage(botMessage);
     }
   };
 

@@ -13,7 +13,7 @@ export function DynamicChatForm() {
     >
       <div
         className={`flex max-h-64 pt-1 transition-all ${
-          prompt.length > 55 && "mb-10"
+          prompt.length > 50 && "mb-10"
         }`}
       >
         <WandSparklesIcon className="size-4 mt-3 text-zinc-600" />
@@ -33,7 +33,11 @@ export function DynamicChatForm() {
           {prompt.length}/2000
         </p>
 
-        <button className="cursor-pointer p-2 rounded-full transition-all hover:bg-black hover:text-white">
+        <button
+          disabled={prompt.trim().length === 0 || prompt.length > 2000}
+          type="submit"
+          className="cursor-pointer p-2 rounded-full transition-all hover:bg-black hover:text-white disabled:bg-zinc-300 border-solid border-transparent border-[1px] disabled:border-zinc-400 disabled:text-zinc-400 disabled:cursor-not-allowed"
+        >
           <SendIcon className="size-5" />
         </button>
       </div>
