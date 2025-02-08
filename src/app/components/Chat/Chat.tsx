@@ -42,38 +42,38 @@ export default function Chat() {
               <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1.5px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
             </div>
 
-            <h2 className="text-4xl text-center font-bold">
+            <h2 className="text-4xl text-center font-bold dark:text-zinc-100">
               Your AI-Powered Crypto Companion
             </h2>
-            <p className="max-w-sm text-base text-center text-zinc-600">
+            <p className="max-w-sm text-base text-center text-zinc-600 dark:text-zinc-400">
               Automated, user-friendly chat for token swaps and crypto insights.
             </p>
 
             <form
               onSubmit={handleSubmit}
-              className={`flex flex-col w-[840px] gap-2 bg-[#F9F9F7] rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200`}
+              className={`flex flex-col w-[840px] gap-2 bg-[#F9F9F7] dark:bg-zinc-900 rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200 dark:border-zinc-800`}
             >
               <div className="flex max-h-64 pt-2">
-                <WandSparklesIcon className="size-4 mt-3 text-zinc-600" />
+                <WandSparklesIcon className="size-4 mt-3 text-zinc-600 dark:text-zinc-300" />
                 <TextAreaAutosize
                   autoFocus
                   maxLength={2000}
                   value={input}
                   onChange={handleInputChange}
                   onKeyDown={(e) => handleKeyPress(e)}
-                  className="min-h-16 max-h-64 w-full resize-none px-3 py-2 rounded-md bg-transparent text-zinc-800 transition-all outline-none focus:outline-none placeholder:text-zinc-500 custom-scrollbar"
+                  className="min-h-16 max-h-64 w-full resize-none px-3 py-2 rounded-md bg-transparent text-zinc-800 dark:text-zinc-100 transition-all outline-none focus:outline-none placeholder:text-zinc-500 dark:placeholder:text-zinc-300 custom-scrollbar"
                   placeholder="Type your message..."
                 ></TextAreaAutosize>
               </div>
               <div className="flex justify-end items-center gap-4 pt-2">
-                <p className="text-xs text-zinc-400 tracking-wide">
+                <p className="text-xs text-zinc-400 dark:text-zinc-300 tracking-wide">
                   {input.length}/2000
                 </p>
 
                 <button
                   disabled={input.trim().length === 0 || input.length > 2000}
                   type="submit"
-                  className="group relative inline-flex size-11 items-center justify-center overflow-hidden rounded-full bg-black font-medium text-white transition-all duration-200 hover:w-24 disabled:bg-zinc-300 border-solid border-[1px] disabled:border-zinc-400 disabled:text-zinc-400 disabled:cursor-not-allowed disabled:hover:w-11"
+                  className="group relative inline-flex size-11 items-center justify-center overflow-hidden rounded-full bg-black dark:bg-[#1091ea] font-medium text-white transition-all duration-200 hover:w-24 disabled:bg-zinc-300 dark:disabled:bg-zinc-800 border-solid border-[1px] dark:border-[#1091ea] disabled:border-zinc-400 disabled:text-zinc-400 dark:disabled:border-zinc-700 dark:disabled:text-zinc-700 disabled:cursor-not-allowed disabled:hover:w-11"
                 >
                   <div className="inline-flex whitespace-nowrap opacity-0 transition-all duration-200 group-hover:-translate-x-3 group-hover:opacity-100 group-disabled:opacity-0">
                     Send
@@ -92,7 +92,7 @@ export default function Chat() {
                 return (
                   <li
                     key={m.id}
-                    className={`flex items-center px-2 py-2 max-w-[885px] gap-2 text-black  ${
+                    className={`flex items-center px-2 py-2 max-w-[885px] gap-2 text-black dark:text-zinc-100 ${
                       m.role === "user"
                         ? "self-end text-sm text-zinc-800"
                         : "self-start text-sm text-zinc-800"
@@ -111,19 +111,19 @@ export default function Chat() {
             <div className="fixed bottom-0 pb-2">
               <form
                 onSubmit={handleSubmit}
-                className={`relative flex flex-col w-[840px] gap-2 bg-[#F9F9F7] rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200`}
+                className={`relative flex flex-col w-[840px] gap-2 bg-[#F9F9F7] dark:bg-zinc-900 rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200 dark:border-zinc-800`}
               >
                 <div
                   className={`flex max-h-64 pt-1 transition-all ${
                     input.length > 50 && "mb-10"
                   }`}
                 >
-                  <WandSparklesIcon className="size-4 mt-3 text-zinc-600" />
+                  <WandSparklesIcon className="size-4 mt-3 text-zinc-600 dark:text-zinc-300" />
                   <TextAreaAutosize
                     value={input}
                     onChange={handleInputChange}
                     onKeyDown={(e) => handleKeyPress(e)}
-                    className="max-h-32 w-full resize-none px-3 py-2 rounded-md text-zinc-800 bg-transparent transition-all outline-none focus:outline-none placeholder:text-zinc-500 custom-scrollbar"
+                    className="max-h-32 w-full resize-none px-3 py-2 rounded-md text-zinc-800 dark:text-zinc-100 bg-transparent transition-all outline-none focus:outline-none placeholder:text-zinc-500 dark:placeholder:text-zinc-300 custom-scrollbar"
                     placeholder="Type your message..."
                   ></TextAreaAutosize>
                 </div>
@@ -131,14 +131,14 @@ export default function Chat() {
                 <div
                   className={`absolute bottom-0 right-2 flex justify-end items-center gap-4 py-2 px-2`}
                 >
-                  <p className="text-xs text-zinc-400 tracking-wide">
+                  <p className="text-xs text-zinc-400 dark:text-zinc-300 tracking-wide">
                     {input.length}/2000
                   </p>
 
                   <button
                     disabled={input.trim().length === 0 || input.length > 2000}
                     type="submit"
-                    className="cursor-pointer p-2 rounded-full transition-all hover:bg-black hover:text-white disabled:bg-zinc-300 border-solid border-transparent border-[1px] disabled:border-zinc-400 disabled:text-zinc-400 disabled:cursor-not-allowed"
+                    className="cursor-pointer p-2 rounded-full transition-all dark:text-white hover:bg-black dark:hover:bg-[#1091ea] hover:text-white disabled:bg-zinc-300 border-solid border-transparent border-[1px] disabled:border-zinc-400 dark:disabled:bg-zinc-800 disabled:text-zinc-400 dark:disabled:border-zinc-700 dark:disabled:text-zinc-700 disabled:cursor-not-allowed"
                   >
                     <SendIcon className="size-5" />
                   </button>

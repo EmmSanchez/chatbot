@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/Sidebar/AppSidebar";
 import "./globals.css";
+import { ThemeProvider } from "./components/theme-provider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -20,15 +21,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={` ${roboto} antialiased`}>
-        <SidebarProvider>
-          <AppSidebar />
-          <main className="w-full">
-            <SidebarTrigger className="absolute ml-1 mt-1" />
-            {children}
-          </main>
-        </SidebarProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider>
+            <AppSidebar />
+            <main className="w-full dark:bg-[#232227]">
+              <SidebarTrigger className="absolute ml-1 mt-1 dark:invert" />
+              {children}
+            </main>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

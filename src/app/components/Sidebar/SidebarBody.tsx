@@ -49,7 +49,7 @@ export function SidebarBody() {
                       <SidebarMenuButton
                         asChild
                         onClick={() => setIsMessagesOpen(!isMessagesOpen)}
-                        className={`rounded-[6px] hover:bg-[#DDE0D6] transition-colors hover:text-black group-data-[state=open]/collapsible:hover:bg-[#DDE0D6] group-data-[state=open]/collapsible:hover:text-black`}
+                        className={`rounded-[6px] hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 transition-colors group-data-[state=open]/collapsible:hover:bg-[#DDE0D6] dark:group-data-[state=open]/collapsible:hover:bg-zinc-800 `}
                       >
                         <CollapsibleTrigger>
                           <MessageSquareText />
@@ -69,18 +69,18 @@ export function SidebarBody() {
                                 duration: 0.05,
                               }}
                             >
-                              <SidebarMenuSub className="border-l-2 border-[#EDEDED]">
-                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] transition-colors rounded-[6px] hover:text-black hover:cursor-pointer">
+                              <SidebarMenuSub className="border-l-2 border-[#EDEDED] dark:border-zinc-800">
+                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 transition-colors rounded-[6px] hover:cursor-pointer">
                                   <SidebarMenuSubButton>
                                     Mensaje 1
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
-                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] hover:text-black hover:cursor-pointer">
+                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 hover:cursor-pointer">
                                   <SidebarMenuSubButton>
                                     Mensaje 2
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
-                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] hover:text-black hover:cursor-pointer">
+                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 hover:cursor-pointer">
                                   <SidebarMenuSubButton>
                                     Mensaje 3
                                   </SidebarMenuSubButton>
@@ -99,7 +99,7 @@ export function SidebarBody() {
               return (
                 <SidebarMenuItem
                   key={index}
-                  className="rounded-[6px] transition-colors hover:bg-[#DDE0D6] hover:text-black"
+                  className="rounded-[6px] transition-colors hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 "
                 >
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
