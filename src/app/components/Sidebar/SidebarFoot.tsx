@@ -1,4 +1,10 @@
-import { SidebarFooter } from "@/components/ui/sidebar";
+import {
+  SidebarContent,
+  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 import ToggleTheme from "@/components/ui/toggle-theme";
 import React from "react";
 import {
@@ -6,20 +12,43 @@ import {
   XSocialIcon,
 } from "../../../../public/icons/social-icons";
 
+const socials = [
+  {
+    title: "Follow Us",
+    url: "#",
+    icon: XSocialIcon,
+  },
+  {
+    title: "Messages",
+    url: "#",
+    icon: DiscordIcon,
+  },
+];
+
 export default function SidebarFoot() {
   return (
     <SidebarFooter className="mb-3">
-      <div className="flex flex-col gap-1 text-sm text-zinc-300">
-        <button className="flex justify-between items-center w-full h-12 p-3 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800">
-          <p>Follow Us</p>
-          <XSocialIcon className="size-5" />
-        </button>
-        <button className="flex justify-between items-center w-full h-12 p-3 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800">
-          <p>Join Our Discord</p>
-          <DiscordIcon className="size-5" />
-        </button>
-      </div>
-
+      <SidebarContent className="w-fit">
+        <SidebarMenu>
+          {socials.map((item, index) => {
+            return (
+              <SidebarMenuItem key={index}>
+                <SidebarMenuButton
+                  asChild
+                  className="underline-offset-4 transition hover:underline"
+                >
+                  <a href={item.url} className="flex items-center gap-2">
+                    <item.icon className="size-4" />
+                    <span className="text-sm dark:text-zinc-200">
+                      {item.title}
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarContent>
       <ToggleTheme />
     </SidebarFooter>
   );
