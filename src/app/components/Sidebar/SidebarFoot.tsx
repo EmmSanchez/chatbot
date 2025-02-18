@@ -19,7 +19,7 @@ const socials = [
     icon: XSocialIcon,
   },
   {
-    title: "Messages",
+    title: "Join Our Discord",
     url: "#",
     icon: DiscordIcon,
   },

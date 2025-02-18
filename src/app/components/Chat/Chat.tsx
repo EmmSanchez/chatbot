@@ -20,8 +20,6 @@ export default function Chat() {
     }
   };
 
-  console.log(messages);
-
   return (
     <>
       <AnimatePresence mode="wait">
