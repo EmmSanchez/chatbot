@@ -4,6 +4,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/Sidebar/AppSidebar";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
+import PrivyContainer from "./components/privy-provider";
+import LogoutButton from "./components/Header/LogoutButton";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -29,13 +31,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full dark:bg-[#232227]">
-              <SidebarTrigger className="absolute ml-1 mt-1 dark:invert" />
-              {children}
-            </main>
-          </SidebarProvider>
+          <PrivyContainer>
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="w-full dark:bg-[#232227] relative">
+                <div className="absolute flex w-full h-7 justify-between items-center pr-1">
+                  <SidebarTrigger className="dark:invert" />
+                  <LogoutButton />
+                </div>
+                {children}
+              </main>
+            </SidebarProvider>
+          </PrivyContainer>
         </ThemeProvider>
       </body>
     </html>
