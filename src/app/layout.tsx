@@ -5,7 +5,7 @@ import { AppSidebar } from "./components/Sidebar/AppSidebar";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 import PrivyContainer from "./components/privy-provider";
-import LogoutButton from "./components/Header/LogoutButton";
+import AuthButton from "./components/Header/AuthButton";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -35,9 +35,9 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar />
               <main className="w-full dark:bg-[#232227] relative">
-                <div className="absolute flex w-full h-7 justify-between items-center pr-1">
+                <div className="absolute flex w-full h-11 justify-between items-center pr-1 backdrop-blur-sm">
                   <SidebarTrigger className="dark:invert" />
-                  <LogoutButton />
+                  <AuthButton />
                 </div>
                 {children}
               </main>

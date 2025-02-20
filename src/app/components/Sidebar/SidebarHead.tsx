@@ -11,7 +11,7 @@ export default function SidebarHead() {
   const { state } = useSidebar();
 
   return (
-    <SidebarHeader className="border-solid border-b-2 border-[#EDEDED] dark:border-zinc-800">
+    <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem className={`rounded-[8px] transition-all ease-in-out`}>
           <div
