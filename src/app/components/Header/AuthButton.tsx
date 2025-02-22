@@ -2,12 +2,35 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 import { LogIn, LogOutIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function AuthButton() {
-  const { login, logout, authenticated } = usePrivy();
+  const { login, logout, authenticated, user } = usePrivy();
 
-  // console.log(user?.id);
+  useEffect(() => {
+    if (authenticated && user) {
+      const login = async () => {
+        try {
+          const data = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: user.id,
+              username: user.email?.address || user.wallet?.address,
+            }),
+          });
+          console.log(data);
+        } catch (error) {
+          console.error(error);
+          throw new Error("Error getting user data");
+        }
+      };
+
+      login();
+    }
+  }, [authenticated]);
 
   return (
     <>
