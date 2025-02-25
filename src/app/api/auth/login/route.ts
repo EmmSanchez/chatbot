@@ -1,4 +1,4 @@
-import { logInUser } from "@/app/controllers/chatController";
+import { logInUser } from "@/app/controllers/loginController";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
