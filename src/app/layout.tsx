@@ -34,7 +34,7 @@ export default function RootLayout({
           <PrivyContainer>
             <SidebarProvider>
               <AppSidebar />
-              <main className="w-full dark:bg-[#232227] relative">
+              <main className="w-full dark:bg-[#232227] relative overflow-hidden">
                 <div className="absolute flex w-full h-11 justify-between items-center pr-1 backdrop-blur-sm">
                   <SidebarTrigger className="dark:invert" />
                   <AuthButton />
