@@ -31,25 +31,44 @@ export async function findOrCreateUser(userId: string, username: string) {
   }
 }
 
-// export async function getChatsByUser(userId: string) {
-//   try {
-//   } catch (error) {
-//     console.error(error);
-//     return [];
-//   }
-// }
+export async function getChatsByUser(userId: string) {
+  try {
+    const chats = await pool.query(
+      `SELECT DISTINCT ON (a.id) 
+          a.id AS chat_id, 
+          b.id AS message_id, 
+          b.content AS first_message, 
+          b.created_at  
+       FROM chats a
+       JOIN messages b ON a.id = b.chat_id
+       WHERE a.user_id = $1
+       ORDER BY a.id, b.created_at ASC`,
+      [userId]
+    );
+
+    if (chats.rowCount) {
+      return chats.rows;
+    }
+
+    return [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 
 export async function createChat(user_id: string) {
   try {
     const newChat = await pool.query(
-      "INSER INTO chats (user_id) VALUES ($1) RETURNING *",
+      "INSERT INTO chats (user_id) VALUES ($1) RETURNING *",
       [user_id]
     );
+
     if (!newChat) {
       throw new Error("Error trying to save chat");
     }
 
-    return newChat;
+    return newChat.rows[0];
   } catch (error) {
     console.error(error);
     return [];
