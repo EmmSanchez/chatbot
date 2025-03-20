@@ -35,6 +35,7 @@ export const useUserStore = create<UserState>((set) => ({
   clearUser: () => set({ userInfo: { id: "", username: "" } }),
 }));
 
+// Saving the chat id when a chat is saved or fetched from the DB
 interface ChatState {
   chatId: string | null;
   setChatId: (id: string) => void;
@@ -45,4 +46,27 @@ export const useChatState = create<ChatState>((set) => ({
   chatId: null,
   setChatId: (id: string) => set({ chatId: id }),
   clearChatId: () => set({ chatId: null }),
+}));
+
+// Storing chats and every first message for UI sidebar
+interface ChatInterface {
+  chatId: string;
+  createdAt: string;
+  firstMessage: string;
+  messageId: string;
+}
+
+interface ListOfChatsState {
+  chatsInfo: ChatInterface[];
+  setChats: (chats: ChatInterface[]) => void;
+  clearChats: () => void;
+}
+
+export const useListOfChatsState = create<ListOfChatsState>((set) => ({
+  chatsInfo: [],
+  setChats: (chats) => set({ chatsInfo: chats }),
+  clearChats: () =>
+    set({
+      chatsInfo: [],
+    }),
 }));
