@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, KeyboardEvent, useEffect, useState } from "react";
+import { FormEvent, KeyboardEvent, useEffect } from "react";
 import { AnimatePresence } from "motion/react";
 import { motion } from "motion/react";
 import { useChat } from "ai/react";
@@ -7,7 +7,7 @@ import { SendIcon, WandSparklesIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
 import UserMessage from "./UserMessage";
 import BotMessage from "./BotMessage";
-import { useChatState, useUserStore } from "@/store/store";
+import { useChatState, useListOfChatsState, useUserStore } from "@/store/store";
 import { usePrivy } from "@privy-io/react-auth";
 
 export default function Chat() {
@@ -45,7 +45,7 @@ export default function Chat() {
   const userInfo = useUserStore((state) => state.userInfo);
   const chatId = useChatState((state) => state.chatId);
   const setChatId = useChatState((state) => state.setChatId);
-  const [chats, setChats] = useState<string[]>([]);
+  const setChats = useListOfChatsState((state) => state.setChats);
   const { authenticated, login } = usePrivy();
 
   const saveChat = async () => {
@@ -142,8 +142,6 @@ export default function Chat() {
 
     getChatsByUserId();
   }, [authenticated, userInfo]);
-
-  console.log(chats);
 
   return (
     <>

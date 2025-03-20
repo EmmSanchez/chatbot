@@ -14,6 +14,8 @@ import { Collapsible, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown, MessageSquareText, Plus } from "lucide-react";
 import { useState } from "react";
+import { useListOfChatsState } from "@/store/store";
+// import { useChat } from "ai/react";
 
 const items = [
   {
@@ -30,6 +32,13 @@ const items = [
 
 export function SidebarBody() {
   const [isMessagesOpen, setIsMessagesOpen] = useState<boolean>(false);
+  const chatsInfo = useListOfChatsState((state) => state.chatsInfo);
+  // const { messages } = useChat();
+
+  const getChatById = (id: string) => {
+    alert(id);
+    // const messages = await fetch("/api/")
+  };
 
   return (
     <SidebarContent>
@@ -69,23 +78,27 @@ export function SidebarBody() {
                                 duration: 0.05,
                               }}
                             >
-                              <SidebarMenuSub className="border-l-2 border-[#EDEDED] dark:border-zinc-800">
-                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 transition-colors rounded-[6px] hover:cursor-pointer">
-                                  <SidebarMenuSubButton>
-                                    Mensaje 1
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 hover:cursor-pointer">
-                                  <SidebarMenuSubButton>
-                                    Mensaje 2
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                                <SidebarMenuSubItem className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 hover:cursor-pointer">
-                                  <SidebarMenuSubButton>
-                                    Mensaje 3
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                              </SidebarMenuSub>
+                              {chatsInfo && (
+                                <SidebarMenuSub className="border-l-2 border-[#EDEDED] dark:border-zinc-800">
+                                  {chatsInfo.map((chat, index) => {
+                                    return (
+                                      <SidebarMenuSubItem
+                                        key={index}
+                                        className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 transition-colors rounded-[6px] hover:cursor-pointer"
+                                      >
+                                        <SidebarMenuSubButton
+                                          onClick={() =>
+                                            getChatById(chat.chatId)
+                                          }
+                                          className="whitespace-nowrap"
+                                        >
+                                          {chat.firstMessage.slice(0, 25)} ...
+                                        </SidebarMenuSubButton>
+                                      </SidebarMenuSubItem>
+                                    );
+                                  })}
+                                </SidebarMenuSub>
+                              )}
                             </motion.div>
                           )}
                         </AnimatePresence>
