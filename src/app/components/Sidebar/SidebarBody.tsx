@@ -7,25 +7,24 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown, MessageSquareText, Plus } from "lucide-react";
 import { useState } from "react";
-import { useListOfChatsState } from "@/store/store";
-// import { useChat } from "ai/react";
+import { useChatState, useListOfChatsState } from "@/store/store";
+import Link from "next/link";
 
 const items = [
   {
     title: "New Chat",
-    url: "#",
+    url: "/",
     icon: Plus,
   },
   {
     title: "Messages",
-    url: "#",
+    url: "/",
     icon: MessageSquareText,
   },
 ];
@@ -33,11 +32,10 @@ const items = [
 export function SidebarBody() {
   const [isMessagesOpen, setIsMessagesOpen] = useState<boolean>(false);
   const chatsInfo = useListOfChatsState((state) => state.chatsInfo);
-  // const { messages } = useChat();
+  const setChatId = useChatState((state) => state.setChatId);
 
   const getChatById = (id: string) => {
-    alert(id);
-    // const messages = await fetch("/api/")
+    setChatId(id);
   };
 
   return (
@@ -84,16 +82,17 @@ export function SidebarBody() {
                                     return (
                                       <SidebarMenuSubItem
                                         key={index}
-                                        className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 transition-colors rounded-[6px] hover:cursor-pointer"
+                                        className="hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 transition-colors rounded-[6px] hover:cursor-pointer overflow-hidden"
                                       >
-                                        <SidebarMenuSubButton
+                                        <Link
+                                          href={`/c/${chat.chatId}`}
                                           onClick={() =>
                                             getChatById(chat.chatId)
                                           }
-                                          className="whitespace-nowrap"
+                                          className="flex whitespace-nowrap text-sm px-2 py-1"
                                         >
                                           {chat.firstMessage.slice(0, 25)} ...
-                                        </SidebarMenuSubButton>
+                                        </Link>
                                       </SidebarMenuSubItem>
                                     );
                                   })}
@@ -103,7 +102,6 @@ export function SidebarBody() {
                           )}
                         </AnimatePresence>
                       }
-                      {/* <CollapsibleContent></CollapsibleContent> */}
                     </SidebarMenuItem>
                   </Collapsible>
                 );
@@ -115,10 +113,10 @@ export function SidebarBody() {
                   className="rounded-[6px] transition-colors hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 "
                 >
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );

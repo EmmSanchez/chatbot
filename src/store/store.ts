@@ -1,5 +1,6 @@
 import { create } from "zustand";
-// import { Message } from "@/types/types";
+import { Message } from "@/types/types";
+// import { useChat } from "ai/react";
 
 // interface ChatState {
 //   prompt: string;
@@ -16,6 +17,7 @@ import { create } from "zustand";
 //     set((state) => ({ messages: [...state.messages, newMessage] })),
 // }));
 
+// User Info
 interface UserState {
   userInfo: {
     id: string;
@@ -69,4 +71,15 @@ export const useListOfChatsState = create<ListOfChatsState>((set) => ({
     set({
       chatsInfo: [],
     }),
+}));
+
+// Store messages as a global variable
+interface MessagesState {
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
+}
+
+export const useMessageStore = create<MessagesState>((set) => ({
+  messages: [],
+  setMessages: (messages) => set({ messages }),
 }));

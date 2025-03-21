@@ -57,6 +57,24 @@ export async function getChatsByUser(userId: string) {
   }
 }
 
+export async function getChatMessagesById(id: string) {
+  try {
+    const messages = await pool.query(
+      `SELECT * FROM messages WHERE chat_id = $1 ORDER BY created_at ASC`,
+      [id]
+    );
+
+    if (messages.rowCount) {
+      return messages.rows;
+    }
+
+    return [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 export async function createChat(user_id: string) {
   try {
     const newChat = await pool.query(
