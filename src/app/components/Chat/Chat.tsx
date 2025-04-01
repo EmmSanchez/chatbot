@@ -1,79 +1,21 @@
 "use client";
-import { FormEvent, KeyboardEvent, useEffect } from "react";
+import { useEffect } from "react";
 import { AnimatePresence } from "motion/react";
 import { motion } from "motion/react";
-import { useChat } from "ai/react";
+import { useCustomChat } from "@/hooks/useCustomChat";
 import { SendIcon, WandSparklesIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
-import { useChatState, useListOfChatsState, useUserStore } from "@/store/store";
+import { useChatStore, useListOfChatsState, useUserStore } from "@/store/store";
 import { usePrivy } from "@privy-io/react-auth";
-import ChatContent from "@/app/c/[chatId]/page";
+import { Message } from "ai";
+import { useRouter } from "next/navigation";
 
 export default function Chat() {
-  const { messages, setMessages, input, handleInputChange, handleSubmit } =
-    useChat({
-      async onFinish(message) {
-        let currentChatId = chatId;
-
-        if (!chatId) {
-          currentChatId = await saveChat();
-        }
-
-        const user = {
-          id: message.id,
-          content: input,
-          createdAt: message.createdAt,
-          role: "user",
-        };
-
-        if (!currentChatId) return;
-
-        await saveMessage(currentChatId, userInfo.id, "user", user.content);
-
-        const system = {
-          ...message,
-        };
-
-        await saveMessage(
-          currentChatId,
-          userInfo.id,
-          "assistant",
-          system.content
-        );
-      },
-    });
+  const router = useRouter();
   const userInfo = useUserStore((state) => state.userInfo);
-  const chatId = useChatState((state) => state.chatId);
-  const setChatId = useChatState((state) => state.setChatId);
+  const chatId = useChatStore((state) => state.chatId);
   const setChats = useListOfChatsState((state) => state.setChats);
-  const { authenticated, login } = usePrivy();
-
-  const saveChat = async () => {
-    try {
-      const data = await fetch("/api/chat/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userInfo.id,
-        }),
-      });
-
-      const { response, success } = await data.json();
-
-      if (success && response?.id) {
-        setChatId(response.id);
-        return response.id;
-      } else {
-        console.log("We couldn't save the chat");
-        return null;
-      }
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
+  const { authenticated } = usePrivy();
 
   const saveMessage = async (
     chat_id: string,
@@ -96,26 +38,64 @@ export default function Chat() {
     }
   };
 
-  const handleSend = async (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | KeyboardEvent<HTMLTextAreaElement>
-      | FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    if (!authenticated) return login();
+  const saveChat = async () => {
+    try {
+      const data = await fetch("/api/chat/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userInfo.id,
+        }),
+      });
 
-    await handleSubmit();
-  };
+      const { response, success } = await data.json();
 
-  const handleKeyPress = (
-    e: KeyboardEvent<HTMLTextAreaElement> | FormEvent<HTMLFormElement>
-  ) => {
-    if ("key" in e && e.key === "Enter") {
-      e.preventDefault();
-      handleSend(e);
+      if (success && response?.id) {
+        return response.id;
+      } else {
+        console.error("We couldn't save the chat");
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   };
+
+  const { messages, input, handleInputChange, handleSend, handleKeyPress } =
+    useCustomChat({
+      onFinish: async (message: Message) => {
+        let currentChatId = chatId;
+
+        if (!currentChatId) {
+          currentChatId = await saveChat();
+          router.push(`/c/${currentChatId}`);
+        }
+
+        if (!currentChatId) return console.error("ChatId is needed");
+
+        console.log(currentChatId);
+
+        const user = {
+          id: message.id,
+          content: input,
+          createdAt: message.createdAt,
+          role: "user",
+        };
+
+        await saveMessage(currentChatId, userInfo.id, "user", user.content);
+
+        const system = { ...message };
+        await saveMessage(
+          currentChatId,
+          userInfo.id,
+          "assistant",
+          system.content
+        );
+      },
+    });
 
   useEffect(() => {
     if (!authenticated || !userInfo.id) return;
@@ -143,10 +123,12 @@ export default function Chat() {
     getChatsByUserId();
   }, [authenticated, userInfo]);
 
+  console.log(messages);
+
   return (
     <>
       <AnimatePresence mode="wait">
-        {messages.length === 0 ? (
+        {messages.length === 0 && (
           <motion.div
             key="empty-state"
             initial={{ opacity: 0 }}
@@ -157,7 +139,7 @@ export default function Chat() {
               type: "tween",
               ease: "backInOut",
             }}
-            className="flex flex-col gap-4 justify-center items-center w-full px-4"
+            className="flex flex-col gap-4 justify-center items-center w-full h-full px-4"
           >
             <h2 className="text-4xl text-center font-bold dark:text-zinc-100">
               Your AI-Powered Crypto Companion
@@ -190,7 +172,6 @@ export default function Chat() {
                 <button
                   disabled={input.trim().length === 0 || input.length > 2000}
                   type="submit"
-                  onClick={(e) => handleSend(e)}
                   className="group relative inline-flex size-11 items-center justify-center overflow-hidden rounded-full bg-black dark:bg-[#1091ea] font-medium text-white transition-all duration-200 hover:w-24 disabled:bg-zinc-300 dark:disabled:bg-zinc-800 border-solid border-[1px] dark:border-[#1091ea] disabled:border-zinc-400 disabled:text-zinc-400 dark:disabled:border-zinc-700 dark:disabled:text-zinc-700 disabled:cursor-not-allowed disabled:hover:w-11"
                 >
                   <div className="inline-flex whitespace-nowrap opacity-0 transition-all duration-200 group-hover:-translate-x-3 group-hover:opacity-100 group-disabled:opacity-0">
@@ -203,15 +184,6 @@ export default function Chat() {
               </div>
             </form>
           </motion.div>
-        ) : (
-          <ChatContent
-            messages={messages}
-            setMessages={setMessages}
-            input={input}
-            handleSubmit={handleSubmit}
-            handleInputChange={handleInputChange}
-            handleKeyPress={handleKeyPress}
-          />
         )}
       </AnimatePresence>
     </>

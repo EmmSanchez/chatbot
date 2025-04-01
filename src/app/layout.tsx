@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${roboto} antialiased`}>
+      <body className={`${roboto.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -34,12 +34,12 @@ export default function RootLayout({
           <PrivyContainer>
             <SidebarProvider>
               <AppSidebar />
-              <main className="w-full dark:bg-[#232227] relative overflow-y-clip">
-                <div className="sticky top-0 z-10 flex w-full h-11 justify-between items-center pr-1 backdrop-blur-md overflow-hidden">
+              <main className="flex flex-col w-full dark:bg-[#232227] relative">
+                <div className="flex sticky top-0 z-10 w-full h-11 justify-between items-center pr-1 backdrop-blur-md bg-zinc-800/80 border-solid border-b-[1px] border-zinc-700">
                   <SidebarTrigger className="dark:invert" />
                   <AuthButton />
                 </div>
-                {children}
+                <div className="flex-grow relative">{children}</div>
               </main>
             </SidebarProvider>
           </PrivyContainer>

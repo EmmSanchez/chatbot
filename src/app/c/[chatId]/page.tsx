@@ -1,44 +1,109 @@
 "use client";
 import React, { useEffect } from "react";
-import { FormEvent, KeyboardEvent } from "react";
 import Messages from "@/app/components/Chat/Messages";
 import { SendIcon, WandSparklesIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
-import { ChatRequestOptions, Message } from "ai";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useCustomChat } from "@/hooks/useCustomChat";
+import { useChatStore, useUserStore } from "@/store/store";
+import { Message } from "ai";
 
-interface ChatContentProps {
-  messages: Message[];
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[])
-  ) => void;
-  input: string;
-  handleSubmit: (
-    event?: {
-      preventDefault?: () => void;
-    },
-    chatRequestOptions?: ChatRequestOptions
-  ) => void;
-  handleInputChange: (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) => void;
-  handleKeyPress: (
-    e: KeyboardEvent<HTMLTextAreaElement> | FormEvent<HTMLFormElement>
-  ) => void;
-}
-
-export default function ChatContent({
-  messages,
-  setMessages,
-  input,
-  handleSubmit,
-  handleInputChange,
-  handleKeyPress,
-}: ChatContentProps) {
+export default function ChatContent() {
   const { chatId } = useParams();
-  // const setMessages = useMessageStore((state) => state.setMessages);
+  const router = useRouter();
+  const userInfo = useUserStore((state) => state.userInfo);
+
+  const isNewChat = useChatStore((state) => state.isNewChat);
+  const setIsNewChat = useChatStore((state) => state.setIsNewChat);
+
+  const saveMessage = async (
+    chat_id: string,
+    user_id: string,
+    rol: "user" | "assistant",
+    content: string
+  ) => {
+    if (!chat_id || !user_id || !content) return;
+
+    try {
+      const integerOfRol = rol === "user" ? 1 : 2;
+
+      await fetch("/api/chat/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ chat_id, user_id, rol: integerOfRol, content }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const saveChat = async () => {
+    try {
+      const data = await fetch("/api/chat/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userInfo.id,
+        }),
+      });
+
+      const { response, success } = await data.json();
+
+      if (success && response?.id) {
+        return response.id;
+      } else {
+        console.error("We couldn't save the chat");
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const {
+    messages,
+    setMessages,
+    input,
+    handleInputChange,
+    handleSend,
+    handleKeyPress,
+  } = useCustomChat({
+    onFinish: async (message: Message) => {
+      let currentChatId = chatId as string;
+
+      if (!currentChatId) {
+        currentChatId = await saveChat();
+        router.push(`/c/${currentChatId}`);
+      }
+
+      if (!currentChatId) return console.error("ChatId is needed");
+
+      console.log(currentChatId);
+
+      const user = {
+        id: message.id,
+        content: input,
+        createdAt: message.createdAt,
+        role: "user",
+      };
+
+      await saveMessage(currentChatId, userInfo.id, "user", user.content);
+
+      const system = { ...message };
+      await saveMessage(
+        currentChatId,
+        userInfo.id,
+        "assistant",
+        system.content
+      );
+    },
+  });
+
   useEffect(() => {
     if (!chatId) return;
 
@@ -61,16 +126,21 @@ export default function ChatContent({
       }
     };
 
-    fetchMessages();
+    if (isNewChat) {
+      setIsNewChat(false);
+      return;
+    } else {
+      fetchMessages();
+    }
   }, [chatId]);
 
   return (
-    <div className="w-full flex justify-center px-4 overflow-y-auto">
+    <div className="w-full flex justify-center items-end h-[calc(100vh-80px)]">
       <Messages messages={messages} />
 
       <div className="fixed bottom-0 pb-2">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSend}
           className={`relative flex flex-col w-[840px] gap-2 bg-[#F9F9F7] dark:bg-zinc-900 rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200 dark:border-zinc-800`}
         >
           <div

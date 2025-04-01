@@ -42,12 +42,16 @@ interface ChatState {
   chatId: string | null;
   setChatId: (id: string) => void;
   clearChatId: () => void;
+  isNewChat: boolean;
+  setIsNewChat: (value: boolean) => void;
 }
 
-export const useChatState = create<ChatState>((set) => ({
+export const useChatStore = create<ChatState>((set) => ({
   chatId: null,
   setChatId: (id: string) => set({ chatId: id }),
   clearChatId: () => set({ chatId: null }),
+  isNewChat: false,
+  setIsNewChat: (value: boolean) => set({ isNewChat: value }),
 }));
 
 // Storing chats and every first message for UI sidebar

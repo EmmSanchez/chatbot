@@ -13,7 +13,7 @@ import { Collapsible, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown, MessageSquareText, Plus } from "lucide-react";
 import { useState } from "react";
-import { useChatState, useListOfChatsState } from "@/store/store";
+import { useChatStore, useListOfChatsState } from "@/store/store";
 import Link from "next/link";
 
 const items = [
@@ -32,9 +32,10 @@ const items = [
 export function SidebarBody() {
   const [isMessagesOpen, setIsMessagesOpen] = useState<boolean>(false);
   const chatsInfo = useListOfChatsState((state) => state.chatsInfo);
-  const setChatId = useChatState((state) => state.setChatId);
+  const setChatId = useChatStore((state) => state.setChatId);
+  const clearChatId = useChatStore((state) => state.clearChatId);
 
-  const getChatById = (id: string) => {
+  const selectChatById = (id: string) => {
     setChatId(id);
   };
 
@@ -87,7 +88,7 @@ export function SidebarBody() {
                                         <Link
                                           href={`/c/${chat.chatId}`}
                                           onClick={() =>
-                                            getChatById(chat.chatId)
+                                            selectChatById(chat.chatId)
                                           }
                                           className="flex whitespace-nowrap text-sm px-2 py-1"
                                         >
@@ -113,7 +114,7 @@ export function SidebarBody() {
                   className="rounded-[6px] transition-colors hover:bg-[#DDE0D6] dark:hover:bg-zinc-800 "
                 >
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link href={item.url} onClick={clearChatId}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
