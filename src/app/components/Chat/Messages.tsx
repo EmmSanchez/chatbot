@@ -9,7 +9,7 @@ interface MessagesProps {
 
 export default function Messages({ messages }: MessagesProps) {
   return (
-    <ul className="flex flex-col justify-end w-[920px] gap-2 pb-20 pt-2">
+    <ul className="flex flex-col w-[920px] gap-2 mb-32 -mt-8">
       {messages?.map((m) => {
         return (
           <li
