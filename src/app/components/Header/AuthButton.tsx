@@ -46,9 +46,9 @@ export default function AuthButton() {
         <>
           <button
             onClick={logout}
-            className="flex h-7 justify-center items-center gap-2 px-4 dark:hover:bg-zinc-600 border border-zinc-600 rounded-full"
+            className="flex h-7 justify-center items-center gap-2 px-4 border border-zinc-300 dark:border-zinc-600 rounded-full hover:bg-zinc-300 dark:hover:bg-zinc-600"
           >
-            <span className="text-sm text-zinc-200">
+            <span className="text-sm text-zinc-700 dark:text-zinc-200">
               {userInfo.username.slice(0, 5)}
             </span>
             <LogOutIcon className="size-[14px] dark:invert" />

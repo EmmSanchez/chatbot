@@ -35,7 +35,7 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar />
               <main className="flex flex-col w-full dark:bg-[#232227] relative">
-                <div className="flex sticky top-0 z-10 w-full h-11 justify-between items-center pr-1 backdrop-blur-md bg-zinc-800/80 border-solid border-b-[1px] border-zinc-700">
+                <div className="flex sticky top-0 z-10 w-full h-11 justify-between items-center pr-1 bg-zinc-200/60 dark:bg-zinc-800/80 border-solid border-b-[1px] border-zinc-300 dark:border-zinc-700">
                   <SidebarTrigger className="dark:invert" />
                   <AuthButton />
                 </div>
