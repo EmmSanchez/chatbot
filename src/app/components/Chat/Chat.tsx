@@ -76,8 +76,6 @@ export default function Chat() {
 
         if (!currentChatId) return console.error("ChatId is needed");
 
-        console.log(currentChatId);
-
         const user = {
           id: message.id,
           content: input,
@@ -122,8 +120,6 @@ export default function Chat() {
 
     getChatsByUserId();
   }, [authenticated, userInfo]);
-
-  console.log(messages);
 
   return (
     <>
