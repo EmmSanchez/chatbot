@@ -1,12 +1,13 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Messages from "@/app/components/Chat/Messages";
-import { SendIcon, WandSparklesIcon } from "lucide-react";
+import { ArrowDown, SendIcon, WandSparklesIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
 import { useParams, useRouter } from "next/navigation";
 import { useCustomChat } from "@/hooks/useCustomChat";
-import { useChatStore, useUserStore } from "@/store/store";
+import { useChatStore, useUIStore, useUserStore } from "@/store/store";
 import { Message } from "ai";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function ChatContent() {
   const { chatId } = useParams();
@@ -15,6 +16,18 @@ export default function ChatContent() {
 
   const isNewChat = useChatStore((state) => state.isNewChat);
   const setIsNewChat = useChatStore((state) => state.setIsNewChat);
+
+  const isAtBottom = useUIStore((state) => state.isAtBottom);
+  const hasContainerScroll = useUIStore((state) => state.hasContainerScroll);
+
+  const messagesContainerRef = useRef<HTMLUListElement | null>(null);
+
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
 
   const saveMessage = async (
     chat_id: string,
@@ -136,16 +149,41 @@ export default function ChatContent() {
 
   return (
     <div className="w-full flex justify-center items-end h-[calc(100vh-80px)]">
-      <Messages messages={messages} />
+      <Messages
+        messages={messages}
+        onRefReady={(ref) => (messagesContainerRef.current = ref)}
+      />
 
       <div className="fixed bottom-0 pb-2">
+        {/* Scroll to bottom button */}
+        <AnimatePresence>
+          {!isAtBottom && hasContainerScroll && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{
+                type: "spring",
+                visualDuration: 0.2,
+                bounce: 0.4,
+              }}
+              className="relative flex justify-center w-full bottom-14"
+            >
+              <ArrowDown
+                onClick={scrollToBottom}
+                className="absolute box-content size-5 p-1 rounded-[8px] bg-zinc-100 dark:bg-[#232227] dark:text-zinc-300 border-solid border-[1px] border-zinc-600 hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <form
           onSubmit={handleSend}
           className={`relative flex flex-col w-[840px] gap-2 bg-[#F9F9F7] dark:bg-zinc-900 rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200 dark:border-zinc-800`}
         >
           <div
             className={`flex max-h-64 pt-1 transition-all ${
-              input?.length > 50 && "mb-10"
+              input?.length > 48 && "mb-10"
             }`}
           >
             <WandSparklesIcon className="size-4 mt-3 text-zinc-600 dark:text-zinc-300" />

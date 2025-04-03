@@ -87,3 +87,18 @@ export const useMessageStore = create<MessagesState>((set) => ({
   messages: [],
   setMessages: (messages) => set({ messages }),
 }));
+
+// Variables for UI
+interface UIState {
+  isAtBottom: boolean;
+  setIsAtBottom: (value: boolean) => void;
+  hasContainerScroll: boolean;
+  setHasContainerScroll: (value: boolean) => void;
+}
+
+export const useUIStore = create<UIState>((set) => ({
+  isAtBottom: true,
+  setIsAtBottom: (value: boolean) => set({ isAtBottom: value }),
+  hasContainerScroll: false,
+  setHasContainerScroll: (value: boolean) => set({ hasContainerScroll: value }),
+}));
