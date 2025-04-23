@@ -45,26 +45,26 @@ export const useCustomChat = (options: UseCustomChatOptions = {}) => {
       return null;
     }
   };
-  const saveMessage = async (
-    chat_id: string,
-    user_id: string,
-    rol: "user" | "assistant",
-    content: string
-  ) => {
-    try {
-      const integerOfRol = rol === "user" ? 1 : 2;
+  // const saveMessage = async (
+  //   chat_id: string,
+  //   user_id: string,
+  //   rol: "user" | "assistant",
+  //   content: string
+  // ) => {
+  //   try {
+  //     const integerOfRol = rol === "user" ? 1 : 2;
 
-      await fetch("/api/chat/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ chat_id, user_id, rol: integerOfRol, content }),
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     await fetch("/api/chat/messages", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ chat_id, user_id, rol: integerOfRol, content }),
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const {
     messages,
