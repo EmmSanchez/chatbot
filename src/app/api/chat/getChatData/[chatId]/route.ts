@@ -1,12 +1,15 @@
 import { getChatById } from "@/app/controllers/getChatById";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { chatId: string } }
-) {
+type GetParams = {
+  params: {
+    chatId: string;
+  };
+};
+
+export async function GET(request: NextRequest, { params }: GetParams) {
   try {
-    const { chatId } = params;
+    const { chatId } = await params;
 
     if (!chatId) {
       return NextResponse.json(
