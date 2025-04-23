@@ -5,9 +5,15 @@ import { ArrowDown, SendIcon, WandSparklesIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
 import { useParams, useRouter } from "next/navigation";
 import { useCustomChat } from "@/hooks/useCustomChat";
-import { useChatStore, useUIStore, useUserStore } from "@/store/store";
+import {
+  useChatStore,
+  useMessageStore,
+  useUIStore,
+  useUserStore,
+} from "@/store/store";
 import { Message } from "ai";
 import { AnimatePresence, motion } from "motion/react";
+import { TYPES_OF_MESSAGES } from "@/types/types";
 
 export default function ChatContent() {
   const { chatId } = useParams();
@@ -21,6 +27,8 @@ export default function ChatContent() {
   const hasContainerScroll = useUIStore((state) => state.hasContainerScroll);
 
   const messagesContainerRef = useRef<HTMLUListElement | null>(null);
+
+  const messagesCopy = useMessageStore((state) => state.messagesCopy);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -82,6 +90,7 @@ export default function ChatContent() {
     messages,
     setMessages,
     input,
+    append,
     handleInputChange,
     handleSend,
     handleKeyPress,
@@ -96,15 +105,12 @@ export default function ChatContent() {
 
       if (!currentChatId) return console.error("ChatId is needed");
 
-      console.log(currentChatId);
-
       const user = {
-        id: message.id,
-        content: input,
-        createdAt: message.createdAt,
+        id: isNewChat ? messagesCopy[0].id : message.id,
+        content: isNewChat ? messagesCopy[0].content : input,
+        createdAt: isNewChat ? messagesCopy[0].createdAt : message.createdAt,
         role: "user",
       };
-
       await saveMessage(currentChatId, userInfo.id, "user", user.content);
 
       const system = { ...message };
@@ -139,7 +145,16 @@ export default function ChatContent() {
       }
     };
 
+    const handleSendForFirstMessage = async () => {
+      try {
+        await append({ role: "user", content: messagesCopy[0].content });
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
     if (isNewChat) {
+      handleSendForFirstMessage();
       setIsNewChat(false);
       return;
     } else {
@@ -178,7 +193,7 @@ export default function ChatContent() {
         </AnimatePresence>
 
         <form
-          onSubmit={handleSend}
+          onSubmit={(e) => handleSend(e)}
           className={`relative flex flex-col w-[840px] gap-2 bg-[#F9F9F7] dark:bg-zinc-900 rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200 dark:border-zinc-800`}
         >
           <div
@@ -190,7 +205,9 @@ export default function ChatContent() {
             <TextAreaAutosize
               value={input}
               onChange={handleInputChange}
-              onKeyDown={(e) => handleKeyPress(e)}
+              onKeyDown={(e) =>
+                handleKeyPress(e, TYPES_OF_MESSAGES.NORMAL_MESSAGE)
+              }
               className="max-h-32 w-full resize-none px-3 py-2 rounded-md text-zinc-800 dark:text-zinc-100 bg-transparent transition-all outline-none focus:outline-none placeholder:text-zinc-500 dark:placeholder:text-zinc-300 custom-scrollbar"
               placeholder="Type your message..."
             ></TextAreaAutosize>

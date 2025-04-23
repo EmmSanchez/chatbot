@@ -5,95 +5,24 @@ import { motion } from "motion/react";
 import { useCustomChat } from "@/hooks/useCustomChat";
 import { SendIcon, WandSparklesIcon } from "lucide-react";
 import TextAreaAutosize from "react-textarea-autosize";
-import { useChatStore, useListOfChatsState, useUserStore } from "@/store/store";
+import { useListOfChatsState, useUserStore } from "@/store/store";
 import { usePrivy } from "@privy-io/react-auth";
-import { Message } from "ai";
-import { useRouter } from "next/navigation";
+import { TYPES_OF_MESSAGES } from "@/types/types";
 
 export default function Chat() {
-  const router = useRouter();
+  // const router = useRouter();
   const userInfo = useUserStore((state) => state.userInfo);
-  const chatId = useChatStore((state) => state.chatId);
+  // const chatId = useChatStore((state) => state.chatId);
   const setChats = useListOfChatsState((state) => state.setChats);
   const { authenticated } = usePrivy();
 
-  const saveMessage = async (
-    chat_id: string,
-    user_id: string,
-    rol: "user" | "assistant",
-    content: string
-  ) => {
-    try {
-      const integerOfRol = rol === "user" ? 1 : 2;
-
-      await fetch("/api/chat/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ chat_id, user_id, rol: integerOfRol, content }),
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const saveChat = async () => {
-    try {
-      const data = await fetch("/api/chat/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userInfo.id,
-        }),
-      });
-
-      const { response, success } = await data.json();
-
-      if (success && response?.id) {
-        return response.id;
-      } else {
-        console.error("We couldn't save the chat");
-        return null;
-      }
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
-  const { messages, input, handleInputChange, handleSend, handleKeyPress } =
-    useCustomChat({
-      onFinish: async (message: Message) => {
-        let currentChatId = chatId;
-
-        if (!currentChatId) {
-          currentChatId = await saveChat();
-          router.push(`/c/${currentChatId}`);
-        }
-
-        if (!currentChatId) return console.error("ChatId is needed");
-
-        const user = {
-          id: message.id,
-          content: input,
-          createdAt: message.createdAt,
-          role: "user",
-        };
-
-        await saveMessage(currentChatId, userInfo.id, "user", user.content);
-
-        const system = { ...message };
-        await saveMessage(
-          currentChatId,
-          userInfo.id,
-          "assistant",
-          system.content
-        );
-      },
-    });
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSendFirstMessage,
+    handleKeyPress,
+  } = useCustomChat({});
 
   useEffect(() => {
     if (!authenticated || !userInfo.id) return;
@@ -145,7 +74,7 @@ export default function Chat() {
             </p>
 
             <form
-              onSubmit={handleSend}
+              onSubmit={(e) => handleSendFirstMessage(e)}
               className={`flex flex-col w-[840px] gap-2 bg-[#F9F9F7] dark:bg-zinc-900 rounded-2xl pb-2 px-3 border-solid border-[1px] border-zinc-200 dark:border-zinc-800`}
             >
               <div className="flex max-h-64 pt-2">
@@ -155,7 +84,9 @@ export default function Chat() {
                   maxLength={2000}
                   value={input}
                   onChange={handleInputChange}
-                  onKeyDown={(e) => handleKeyPress(e)}
+                  onKeyDown={(e) =>
+                    handleKeyPress(e, TYPES_OF_MESSAGES.FIRST_MESSAGE)
+                  }
                   className="min-h-16 max-h-64 w-full resize-none px-3 py-2 rounded-md bg-transparent text-zinc-800 dark:text-zinc-100 transition-all outline-none focus:outline-none placeholder:text-zinc-500 dark:placeholder:text-zinc-300 custom-scrollbar"
                   placeholder="Type your message..."
                 ></TextAreaAutosize>

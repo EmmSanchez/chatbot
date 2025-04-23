@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { Message } from "@/types/types";
+import { Message } from "ai/react";
+
 // import { useChat } from "ai/react";
 
 // interface ChatState {
@@ -44,6 +45,8 @@ interface ChatState {
   clearChatId: () => void;
   isNewChat: boolean;
   setIsNewChat: (value: boolean) => void;
+  inputCopy: string | null;
+  setInputCopy: (input: string) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -52,6 +55,8 @@ export const useChatStore = create<ChatState>((set) => ({
   clearChatId: () => set({ chatId: null }),
   isNewChat: false,
   setIsNewChat: (value: boolean) => set({ isNewChat: value }),
+  inputCopy: null,
+  setInputCopy: (input: string) => set({ inputCopy: input }),
 }));
 
 // Storing chats and every first message for UI sidebar
@@ -79,13 +84,13 @@ export const useListOfChatsState = create<ListOfChatsState>((set) => ({
 
 // Store messages as a global variable
 interface MessagesState {
-  messages: Message[];
-  setMessages: (messages: Message[]) => void;
+  messagesCopy: Message[];
+  setMessagesCopy: (messages: Message[]) => void;
 }
 
 export const useMessageStore = create<MessagesState>((set) => ({
-  messages: [],
-  setMessages: (messages) => set({ messages }),
+  messagesCopy: [],
+  setMessagesCopy: (messages) => set({ messagesCopy: messages }),
 }));
 
 // Variables for UI
