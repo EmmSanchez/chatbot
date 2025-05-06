@@ -67,10 +67,11 @@ export default function Chat() {
             className="flex flex-col gap-4 justify-center items-center w-full h-full px-4"
           >
             <h2 className="text-4xl text-center font-bold dark:text-zinc-100">
-              Your AI-Powered Crypto Companion
+              Your AI-Powered Friendly Asistant
             </h2>
             <p className="max-w-sm text-base text-center text-zinc-600 dark:text-zinc-400">
-              Automated, user-friendly chat for token swaps and crypto insights.
+              Automated, user-friendly chat for smarter interactions and instant
+              support
             </p>
 
             <form
